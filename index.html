@@ -8,14 +8,14 @@
     <style>
         :root {
             --bg: #000000;
-            --card: rgba(0, 20, 0, 0.85);
-            --text: #00ff41;
-            --muted: #00cc33;
-            --bar: #00ff41;
-            --bar2: #39ff14;
-            --border: rgba(0, 255, 65, 0.3);
-            --red: #ff0000;
-            --red-glow: rgba(255, 0, 0, 0.5);
+            --card: rgba(10, 15, 10, 0.92);
+            --text: #00ff88;
+            --muted: #00cc66;
+            --bar: #00ff88;
+            --bar2: #00cc66;
+            --border: rgba(0, 255, 136, 0.25);
+            --accent: #ff3366;
+            --accent-glow: rgba(255, 51, 102, 0.4);
         }
 
         html,
@@ -93,58 +93,28 @@
 
             0%,
             100% {
-                box-shadow: 0 0 40px rgba(0, 255, 65, 0.2), inset 0 0 20px rgba(0, 255, 65, 0.05);
+                box-shadow: 0 0 40px rgba(0, 255, 136, 0.15), inset 0 0 20px rgba(0, 255, 136, 0.03);
             }
 
             50% {
-                box-shadow: 0 0 60px rgba(0, 255, 65, 0.4), inset 0 0 30px rgba(0, 255, 65, 0.1);
+                box-shadow: 0 0 50px rgba(0, 255, 136, 0.25), inset 0 0 25px rgba(0, 255, 136, 0.05);
             }
         }
 
         .skull {
             position: absolute;
-            top: -80px;
+            top: -70px;
             left: 50%;
             transform: translateX(-50%);
-            font-size: 120px;
-            filter: drop-shadow(0 0 20px var(--red-glow)) drop-shadow(0 0 40px var(--red-glow));
-            animation: skullPulse 2s ease-in-out infinite, glitch 5s infinite;
+            width: 60px;
+            height: 60px;
             z-index: 3;
         }
 
-        @keyframes skullPulse {
-
-            0%,
-            100% {
-                transform: translateX(-50%) scale(1);
-                filter: drop-shadow(0 0 20px var(--red-glow)) drop-shadow(0 0 40px var(--red-glow));
-            }
-
-            50% {
-                transform: translateX(-50%) scale(1.05);
-                filter: drop-shadow(0 0 30px var(--red-glow)) drop-shadow(0 0 60px var(--red-glow));
-            }
-        }
-
-        @keyframes glitch {
-
-            0%,
-            90%,
-            100% {
-                transform: translateX(-50%) scale(1);
-            }
-
-            91% {
-                transform: translateX(-48%) scale(1.02);
-            }
-
-            92% {
-                transform: translateX(-52%) scale(0.98);
-            }
-
-            93% {
-                transform: translateX(-50%) scale(1);
-            }
+        .skull svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 0 12px var(--accent-glow));
         }
 
         .top {
@@ -166,12 +136,12 @@
         .spinner {
             width: 18px;
             height: 18px;
-            border: 2px solid rgba(0, 255, 65, 0.25);
+            border: 2px solid rgba(0, 255, 136, 0.2);
             border-top-color: var(--text);
             border-radius: 50%;
             animation: spin 0.9s linear infinite;
             flex: 0 0 auto;
-            box-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
+            box-shadow: 0 0 6px rgba(0, 255, 136, 0.3);
         }
 
         @keyframes spin {
@@ -183,23 +153,9 @@
         h1 {
             font-size: 16px;
             margin: 0;
-            letter-spacing: 1px;
-            font-weight: 700;
-            text-transform: uppercase;
-            text-shadow: 0 0 10px rgba(0, 255, 65, 0.8);
-            animation: textFlicker 0.15s infinite alternate;
-        }
-
-        @keyframes textFlicker {
-
-            0%,
-            100% {
-                opacity: 1;
-            }
-
-            50% {
-                opacity: 0.95;
-            }
+            letter-spacing: 0.5px;
+            font-weight: 600;
+            text-shadow: 0 0 8px rgba(0, 255, 136, 0.4);
         }
 
         .badge {
@@ -209,9 +165,9 @@
             padding: 6px 10px;
             border-radius: 4px;
             user-select: none;
-            background: rgba(0, 255, 65, 0.1);
-            box-shadow: 0 0 10px rgba(0, 255, 65, 0.3);
-            font-weight: bold;
+            background: rgba(0, 255, 136, 0.08);
+            box-shadow: 0 0 8px rgba(0, 255, 136, 0.2);
+            font-weight: 600;
         }
 
         .msg {
@@ -226,7 +182,7 @@
             border-radius: 4px;
             padding: 6px;
             background: rgba(0, 0, 0, 0.6);
-            box-shadow: inset 0 0 10px rgba(0, 255, 65, 0.2);
+            box-shadow: inset 0 0 8px rgba(0, 255, 136, 0.15);
         }
 
         .bar {
@@ -235,7 +191,7 @@
             border-radius: 2px;
             background: linear-gradient(90deg, var(--bar), var(--bar2));
             transition: width 160ms linear;
-            box-shadow: 0 0 15px rgba(0, 255, 65, 0.8);
+            box-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
             position: relative;
             overflow: hidden;
         }
@@ -247,8 +203,8 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-            animation: barShine 2s infinite;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            animation: barShine 3s infinite;
         }
 
         @keyframes barShine {
@@ -281,13 +237,12 @@
             padding: 12px;
             border-radius: 6px;
             border: 1px solid var(--border);
-            background: rgba(0, 255, 65, 0.15);
+            background: rgba(0, 255, 136, 0.1);
             color: var(--text);
             display: none;
-            box-shadow: 0 0 20px rgba(0, 255, 65, 0.3);
-            text-transform: uppercase;
-            font-weight: bold;
-            letter-spacing: 1px;
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.2);
+            font-weight: 600;
+            letter-spacing: 0.5px;
         }
 
         .hint {
@@ -298,15 +253,15 @@
 
         .hint strong {
             color: var(--text);
-            text-shadow: 0 0 5px rgba(0, 255, 65, 0.5);
+            text-shadow: 0 0 4px rgba(0, 255, 136, 0.3);
         }
 
         .footer-notice {
             margin-top: 16px;
             font-size: 11px;
-            color: rgba(0, 255, 65, 0.4);
+            color: rgba(0, 255, 136, 0.4);
             text-align: center;
-            border-top: 1px solid rgba(0, 255, 65, 0.2);
+            border-top: 1px solid rgba(0, 255, 136, 0.15);
             padding-top: 12px;
         }
 
@@ -318,7 +273,7 @@
             height: 100%;
             pointer-events: none;
             z-index: 0;
-            opacity: 0.15;
+            opacity: 0.08;
         }
     </style>
 </head>
@@ -326,7 +281,17 @@
 <body>
     <canvas class="matrix-bg" id="matrixCanvas"></canvas>
     <main class="card" role="status" aria-live="polite">
-        <div class="skull">💀</div>
+        <div class="skull">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                    d="M12 2C8.5 2 6 4.5 6 7.5C6 8.5 6.5 9.5 7 10C6.5 10.5 6 11.5 6 12.5V15C6 15.5 6.5 16 7 16H8V18C8 19 9 20 10 20H14C15 20 16 19 16 18V16H17C17.5 16 18 15.5 18 15V12.5C18 11.5 17.5 10.5 17 10C17.5 9.5 18 8.5 18 7.5C18 4.5 15.5 2 12 2Z"
+                    fill="#ff3366" stroke="#ff3366" stroke-width="0.5" />
+                <circle cx="9.5" cy="9" r="1.5" fill="#000" />
+                <circle cx="14.5" cy="9" r="1.5" fill="#000" />
+                <path d="M10 14C10 14 11 15 12 15C13 15 14 14 14 14" stroke="#000" stroke-width="1.5"
+                    stroke-linecap="round" />
+            </svg>
+        </div>
         <div class="top">
             <div class="title">
                 <div class="spinner" aria-hidden="true"></div>
