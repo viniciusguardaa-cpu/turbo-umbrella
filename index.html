@@ -144,41 +144,82 @@
 
         .terminal-titlebar {
             background: #1e1e1e;
-            padding: 8px 12px;
+            padding: 0;
             border-bottom: 1px solid #333;
             display: flex;
             align-items: center;
             justify-content: space-between;
             border-radius: 8px 8px 0 0;
+            height: 32px;
         }
 
         .terminal-title {
             color: #ccc;
             font-size: 12px;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding-left: 12px;
+            flex: 1;
         }
 
         .terminal-buttons {
             display: flex;
-            gap: 8px;
+            height: 100%;
         }
 
         .terminal-button {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
+            width: 46px;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            transition: background 0.15s;
+            position: relative;
         }
 
-        .terminal-button.close {
-            background: #ff5f56;
+        .terminal-button:hover {
+            background: rgba(255, 255, 255, 0.1);
         }
 
-        .terminal-button.minimize {
-            background: #ffbd2e;
+        .terminal-button.close:hover {
+            background: #e81123;
         }
 
-        .terminal-button.maximize {
-            background: #27c93f;
+        .terminal-button::before {
+            content: '';
+            width: 10px;
+            height: 10px;
+            border: 1px solid #ccc;
+        }
+
+        .terminal-button.minimize::before {
+            border: none;
+            border-bottom: 1px solid #ccc;
+            width: 10px;
+            height: 0;
+        }
+
+        .terminal-button.maximize::before {
+            border: 1px solid #ccc;
+        }
+
+        .terminal-button.close::before {
+            border: none;
+            width: 10px;
+            height: 1px;
+            background: #ccc;
+            transform: rotate(45deg);
+        }
+
+        .terminal-button.close::after {
+            content: '';
+            position: absolute;
+            width: 10px;
+            height: 1px;
+            background: #ccc;
+            transform: rotate(-45deg);
         }
 
         .terminal-content {
@@ -388,12 +429,12 @@
 <body>
     <div class="terminal-window" id="terminalWindow">
         <div class="terminal-titlebar">
+            <div class="terminal-title">Administrator: Command Prompt</div>
             <div class="terminal-buttons">
-                <div class="terminal-button close"></div>
                 <div class="terminal-button minimize"></div>
                 <div class="terminal-button maximize"></div>
+                <div class="terminal-button close"></div>
             </div>
-            <div class="terminal-title">Administrator: Command Prompt</div>
         </div>
         <div class="terminal-content" id="bootLines"></div>
     </div>
