@@ -147,6 +147,15 @@
         .hint strong {
             color: rgba(255, 255, 255, 0.85);
         }
+
+        .footer-notice {
+            margin-top: 16px;
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.35);
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            padding-top: 12px;
+        }
     </style>
 </head>
 
@@ -155,14 +164,14 @@
         <div class="top">
             <div class="title">
                 <div class="spinner" aria-hidden="true"></div>
-                <h1 id="headline">Simulação: seu computador está sendo formatado neste momento</h1>
+                <h1 id="headline">Ok, acesso ao terminal permitido. Seu computador está sendo formatado neste momento
+                </h1>
             </div>
             <div class="badge" id="eta">00:30</div>
         </div>
 
         <p class="msg" id="sub">
-            Aguarde enquanto concluímos o processo. Esta tela é <strong>apenas uma simulação</strong> e não faz nenhuma
-            alteração no seu computador.
+            Aguarde enquanto concluímos o processo.
         </p>
 
         <div class="barWrap" aria-label="Progresso">
@@ -175,12 +184,15 @@
         </div>
 
         <div class="done" id="done">
-            Processo finalizado (simulação). Você pode fechar esta página.
+            Processo finalizado. Você pode fechar esta página.
         </div>
 
         <div class="hint">
             Dica: para mudar o texto, edite o conteúdo de <strong>#headline</strong> e <strong>#sub</strong>.
         </div>
+        <footer class="footer-notice">
+            Apenas efeito visual. Nenhuma alteração real no sistema.
+        </footer>
     </main>
 
     <script>
