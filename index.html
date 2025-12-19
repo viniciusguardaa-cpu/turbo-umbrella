@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Carregando...</title>
+    <style>
+        :root {
+            --bg: #0b1020;
+            --card: rgba(255, 255, 255, 0.06);
+            --text: rgba(255, 255, 255, 0.92);
+            --muted: rgba(255, 255, 255, 0.68);
+            --bar: #7c5cff;
+            --bar2: #38bdf8;
+            --border: rgba(255, 255, 255, 0.12);
+        }
+
+        html,
+        body {
+            height: 100%;
+        }
+
+        body {
+            margin: 0;
+            font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+            background: radial-gradient(1200px 800px at 20% 10%, rgba(124, 92, 255, 0.25), transparent 60%),
+                radial-gradient(900px 600px at 80% 30%, rgba(56, 189, 248, 0.18), transparent 55%),
+                var(--bg);
+            color: var(--text);
+            display: grid;
+            place-items: center;
+            padding: 24px;
+        }
+
+        .card {
+            width: min(720px, 100%);
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 22px 22px 18px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+        }
+
+        .top {
+            display: flex;
+            gap: 14px;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+
+        .title {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            min-width: 260px;
+        }
+
+        .spinner {
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255, 255, 255, 0.25);
+            border-top-color: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            animation: spin 0.9s linear infinite;
+            flex: 0 0 auto;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        h1 {
+            font-size: 16px;
+            margin: 0;
+            letter-spacing: 0.2px;
+            font-weight: 650;
+        }
+
+        .badge {
+            font-size: 12px;
+            color: var(--muted);
+            border: 1px solid var(--border);
+            padding: 6px 10px;
+            border-radius: 999px;
+            user-select: none;
+        }
+
+        .msg {
+            margin: 10px 0 14px;
+            color: var(--muted);
+            line-height: 1.45;
+            font-size: 13px;
+        }
+
+        .barWrap {
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            padding: 6px;
+            background: rgba(0, 0, 0, 0.25);
+        }
+
+        .bar {
+            height: 12px;
+            width: 0%;
+            border-radius: 999px;
+            background: linear-gradient(90deg, var(--bar), var(--bar2));
+            transition: width 160ms linear;
+        }
+
+        .row {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            margin-top: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .mono {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        }
+
+        .done {
+            margin-top: 14px;
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: rgba(16, 185, 129, 0.08);
+            color: rgba(255, 255, 255, 0.9);
+            display: none;
+        }
+
+        .hint {
+            margin-top: 10px;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.55);
+        }
+
+        .hint strong {
+            color: rgba(255, 255, 255, 0.85);
+        }
+    </style>
+</head>
+
+<body>
+    <main class="card" role="status" aria-live="polite">
+        <div class="top">
+            <div class="title">
+                <div class="spinner" aria-hidden="true"></div>
+                <h1 id="headline">Ok, acesso ao terminal permitido. Seu computador está sendo formatado neste momento
+                </h1>
+            </div>
+            <div class="badge" id="eta">00:30</div>
+        </div>
+
+        <p class="msg" id="sub">
+            Aguarde enquanto concluímos o processo.
+        </p>
+
+        <div class="barWrap" aria-label="Progresso">
+            <div class="bar" id="bar"></div>
+        </div>
+
+        <div class="row">
+            <div><span class="mono" id="pct">0%</span> concluído</div>
+            <div class="mono" id="step">Preparando…</div>
+        </div>
+
+        <div class="done" id="done">
+            Processo finalizado (simulação). Você pode fechar esta página.
+        </div>
+
+        <div class="hint">
+            Dica: para mudar o texto, edite o conteúdo de <strong>#headline</strong> e <strong>#sub</strong>.
+        </div>
+    </main>
+
+    <script>
+        const TOTAL = 30_000;
+
+        const bar = document.getElementById('bar');
+        const pct = document.getElementById('pct');
+        const eta = document.getElementById('eta');
+        const step = document.getElementById('step');
+        const done = document.getElementById('done');
+
+        const steps = [
+            "Verificando disco…",
+            "Preparando…",
+            "Aplicando alterações…",
+            "Finalizando…"
+        ];
+
+        const start = performance.now();
+        let tick;
+
+        function fmtTime(ms) {
+            const s = Math.max(0, Math.ceil(ms / 1000));
+            const mm = String(Math.floor(s / 60)).padStart(2, '0');
+            const ss = String(s % 60).padStart(2, '0');
+            return `${mm}:${ss}`;
+        }
+
+        function render(now) {
+            const elapsed = now - start;
+            const t = Math.min(1, elapsed / TOTAL);
+            const p = Math.floor(t * 100);
+
+            bar.style.width = `${t * 100}%`;
+            pct.textContent = `${p}%`;
+
+            const remaining = TOTAL - elapsed;
+            eta.textContent = fmtTime(remaining);
+
+            const idx = Math.min(steps.length - 1, Math.floor(t * steps.length));
+            step.textContent = steps[idx];
+
+            if (t >= 1) {
+                clearInterval(tick);
+                step.textContent = "Concluído.";
+                eta.textContent = "00:00";
+                done.style.display = "block";
+                document.querySelector('.spinner').style.animation = "none";
+                document.querySelector('.spinner').style.borderTopColor = "rgba(255,255,255,0.25)";
+            }
+        }
+
+        tick = setInterval(() => render(performance.now()), 100);
+        render(performance.now());
+    </script>
+</body>
+
+</html>
