@@ -82,11 +82,19 @@
             border-radius: 8px;
             padding: 22px 22px 18px;
             backdrop-filter: blur(10px);
-            box-shadow: 0 0 40px rgba(0, 255, 65, 0.2),
-                inset 0 0 20px rgba(0, 255, 65, 0.05);
+            box-shadow: 0 0 40px rgba(0, 255, 136, 0.15),
+                inset 0 0 20px rgba(0, 255, 136, 0.03);
             position: relative;
             z-index: 2;
             animation: cardGlow 3s ease-in-out infinite;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        .card.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         @keyframes cardGlow {
@@ -101,20 +109,62 @@
             }
         }
 
-        .skull {
-            position: absolute;
-            top: -70px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 60px;
-            height: 60px;
-            z-index: 3;
-        }
-
-        .skull svg {
+        .terminal-boot {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
-            filter: drop-shadow(0 0 15px #00ff41) drop-shadow(0 0 25px #00ff41);
+            background: #000;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 40px;
+            font-family: 'Courier New', monospace;
+            color: var(--text);
+            opacity: 1;
+            transition: opacity 0.5s ease-out;
+        }
+
+        .terminal-boot.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .boot-line {
+            font-size: 14px;
+            margin: 4px 0;
+            opacity: 0;
+            animation: fadeInLine 0.1s forwards;
+        }
+
+        @keyframes fadeInLine {
+            to {
+                opacity: 1;
+            }
+        }
+
+        .boot-cursor {
+            display: inline-block;
+            width: 10px;
+            height: 16px;
+            background: var(--text);
+            margin-left: 4px;
+            animation: blink 0.8s infinite;
+        }
+
+        @keyframes blink {
+
+            0%,
+            50% {
+                opacity: 1;
+            }
+
+            51%,
+            100% {
+                opacity: 0;
+            }
         }
 
         .top {
@@ -279,32 +329,12 @@
 </head>
 
 <body>
+    <div class="terminal-boot" id="terminalBoot">
+        <div id="bootLines"></div>
+    </div>
+
     <canvas class="matrix-bg" id="matrixCanvas"></canvas>
     <main class="card" role="status" aria-live="polite">
-        <div class="skull">
-            <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <!-- Skull -->
-                <ellipse cx="50" cy="35" rx="22" ry="25" fill="#00ff41" stroke="#00ff41" stroke-width="2" />
-                <ellipse cx="42" cy="32" rx="5" ry="7" fill="#000" />
-                <ellipse cx="58" cy="32" rx="5" ry="7" fill="#000" />
-                <path d="M 45 42 Q 50 45 55 42" stroke="#000" stroke-width="2" fill="none" />
-                <rect x="47" y="45" width="6" height="8" fill="#000" />
-
-                <!-- Crossbones -->
-                <g transform="rotate(-45 50 70)">
-                    <rect x="20" y="67" width="60" height="6" rx="3" fill="#00ff41" />
-                </g>
-                <g transform="rotate(45 50 70)">
-                    <rect x="20" y="67" width="60" height="6" rx="3" fill="#00ff41" />
-                </g>
-
-                <!-- Bone ends -->
-                <circle cx="23" cy="55" r="5" fill="#00ff41" />
-                <circle cx="77" cy="55" r="5" fill="#00ff41" />
-                <circle cx="23" cy="85" r="5" fill="#00ff41" />
-                <circle cx="77" cy="85" r="5" fill="#00ff41" />
-            </svg>
-        </div>
         <div class="top">
             <div class="title">
                 <div class="spinner" aria-hidden="true"></div>
@@ -332,6 +362,65 @@
         </div>
 
     </main>
+
+    <script>
+        // Terminal Boot Animation
+        const bootLines = [
+            'Microsoft Windows [Version 10.0.19045.3803]',
+            '(c) Microsoft Corporation. All rights reserved.',
+            '',
+            'C:\\Windows\\system32>',
+            'Checking system permissions...',
+            'Access Level: ADMINISTRATOR',
+            '',
+            'Initializing remote connection...',
+            'Connection established: 192.168.1.1',
+            '',
+            'Loading system modules...',
+            '[OK] kernel32.dll',
+            '[OK] ntdll.dll',
+            '[OK] user32.dll',
+            '',
+            'System access granted.',
+            'Starting process...',
+            ''
+        ];
+
+        const bootContainer = document.getElementById('bootLines');
+        const terminalBoot = document.getElementById('terminalBoot');
+        const card = document.querySelector('.card');
+        let lineIndex = 0;
+
+        function addBootLine() {
+            if (lineIndex < bootLines.length) {
+                const line = document.createElement('div');
+                line.className = 'boot-line';
+                line.textContent = bootLines[lineIndex];
+
+                if (lineIndex === bootLines.length - 1) {
+                    const cursor = document.createElement('span');
+                    cursor.className = 'boot-cursor';
+                    line.appendChild(cursor);
+                }
+
+                bootContainer.appendChild(line);
+                lineIndex++;
+
+                const delay = bootLines[lineIndex - 1] === '' ? 50 : (Math.random() * 100 + 50);
+                setTimeout(addBootLine, delay);
+            } else {
+                setTimeout(() => {
+                    terminalBoot.classList.add('hidden');
+                    card.classList.add('visible');
+                    setTimeout(() => {
+                        terminalBoot.remove();
+                    }, 500);
+                }, 800);
+            }
+        }
+
+        addBootLine();
+    </script>
 
     <script>
         const TOTAL = 30_000;
